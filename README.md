@@ -9,7 +9,7 @@ This tool was made for <a href="https://github.com/hak5darren/USB-Rubber-Ducky/w
 <ul><li><b>Select HD:</b> Which drive the home directory for the ducky will be made.</li></ul>
 <ul><li><b>MicroSD:</b> Which removable storage device the .bin file will be copied to.</li></ul>
 <ul><li><b>Refresh Devices:</b> Will refresh the HD and MicroSD options.</li></ul>
-<ul><li><b>Eject:</b> Removes selected removable drive.</li></ul>
+<ul><li><b>Eject:</b> (nonfunctional) </li></ul>
 <ul><li><b>Keyboard Layout:</b> Allows users to select keyboard layout of scripts using encoder 2.x options.</li></ul>
 <ul><li><b>Payload Selection:</b> Allows users to select default scripts from the official RubberDucky Wiki, along with their own custom scripts.</li></ul>
 <ul><li><b>Load Payload:</b> Loads the selected payload into the editing box.</li></ul>
@@ -17,6 +17,7 @@ This tool was made for <a href="https://github.com/hak5darren/USB-Rubber-Ducky/w
 <ul><li><b>Make .bin:</b> Creates .bin based on the .txt script made using the encoder.</li></ul>
 <ul><li><b>Copy .bin:</b> Copies .bin made to removable storage device selected.</li></ul>
 <h4>To-Do List</h4>
+<ul><li><b>Eject Button:</b> Unmount selected removable drive.</li></ul>
 <ul><li><b>Payload Descriptions:</b> Description tooltips for all default scripts.</li></ul>
 <ul><li><b>Firmware Options:</b> Ability to change Ducky's Firmware.</li></ul>
 <ul><li><b>Recommendations? </b> I'll take any ideas and recommendations users may have!</li></ul>
