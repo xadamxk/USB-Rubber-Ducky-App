@@ -419,13 +419,21 @@ namespace RubberDuckyApp
                     santizedName = santizedName.Remove(0, 1);
 
                 // Assign path
-                var path = Path.Combine(duckyDirectory + "\\Scripts\\Default\\", santizedName + ".txt");
-                if (File.Exists(path))
-                    tempPayload.Code = File.ReadAllText(path);
-                else
+                try
                 {
-                    tempPayload.Code = GetCodeFromPayload(payload);
-                    File.WriteAllText(path, tempPayload.Code);
+                    var path = Path.Combine(duckyDirectory + "\\Scripts\\Default\\", santizedName + ".txt");
+                    if (File.Exists(path))
+                        tempPayload.Code = File.ReadAllText(path);
+                    else
+                    {
+                        tempPayload.Code = GetCodeFromPayload(payload);
+                        File.WriteAllText(path, tempPayload.Code);
+                    }
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show("One of the downloaded files was not able to save." +
+                                    "Check if an Antivirus software/ Firewall prevented this and try again.");
                 }
             }
         }
@@ -504,6 +512,18 @@ namespace RubberDuckyApp
         private void button6_Click(object sender, EventArgs e)
         {
             // Eject selected MicroSD
+            selectedRemovableDrive = selectedRemovableDrive.Trim('\\');
+            selectedRemovableDrive = selectedRemovableDrive.Trim(':');
+            char drive = Char.Parse(selectedRemovableDrive);
+
+            try
+            {
+                EjectDrive.EjectDriveMethod(drive);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
     }

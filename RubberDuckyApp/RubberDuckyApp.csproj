@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EjectDrive.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
