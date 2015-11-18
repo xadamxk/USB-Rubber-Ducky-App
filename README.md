@@ -13,7 +13,7 @@ This tool was made for <a href="https://github.com/hak5darren/USB-Rubber-Ducky/w
 <ul><li><b>Keyboard Layout:</b> Allows users to select keyboard layout of scripts using encoder 2.x options.</li></ul>
 <ul><li><b>Payload Selection:</b> Allows users to select default scripts from the official RubberDucky Wiki, along with their own custom scripts.</li></ul>
 <ul><li><b>Load Payload:</b> Loads the selected payload into the editing box.</li></ul>
-<ul><li><b>Save Payload:</b> Saves contents of messagebox to text file.</li></ul>
+<ul><li><b>Save Payload:</b> Saves contents of testbox to text file.</li></ul>
 <ul><li><b>Make .bin:</b> Creates .bin based on the .txt script made using the encoder.</li></ul>
 <ul><li><b>Copy .bin:</b> Copies .bin made to removable storage device selected.</li></ul>
 <h4>To-Do List</h4>
