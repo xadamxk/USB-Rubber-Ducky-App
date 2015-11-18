@@ -18,7 +18,7 @@ This tool was made for <a href="https://github.com/hak5darren/USB-Rubber-Ducky/w
 <ul><li><b>Copy .bin:</b> Copies .bin made to removable storage device selected.</li></ul>
 <h4>To-Do List</h4>
 <ul><li><strike><b>Eject Button:</b> Unmount selected removable drive.</strike> <b>Complete</b></li></ul>
-<ul><li><strike><b>Payload Descriptions:</b> Description tooltips for all default scripts.</strike> <b>Complete</b></li></ul>
+<ul><li><b>Payload Descriptions:</b> Description tooltips for all default scripts.</li></ul>
 <ul><li><b>Firmware Options:</b> Ability to change Ducky's Firmware.</li></ul>
 <ul><li><b>Recommendations? </b> I'll take any ideas and recommendations users may have!</li></ul>
 
