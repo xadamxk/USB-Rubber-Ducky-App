@@ -16,3 +16,12 @@ C:\Users\Adam\Documents\Visual Studio 2013\Projects\USB-Rubber-Ducky-App\RubberD
 C:\Users\Adam\Documents\Visual Studio 2013\Projects\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.Properties.Resources.resources
 C:\Users\Adam\Documents\Visual Studio 2013\Projects\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.csproj.GenerateResource.Cache
 C:\Users\Adam\Documents\Visual Studio 2013\Projects\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.MainForm.resources
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\bin\Debug\RubberDuckyApp.exe.config
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.exe
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.pdb
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\bin\Debug\RubberDuckyApp.exe
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\bin\Debug\RubberDuckyApp.pdb
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.csprojResolveAssemblyReference.cache
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.MainForm.resources
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.Properties.Resources.resources
+C:\Users\Adam\Documents\GitHub\USB-Rubber-Ducky-App\RubberDuckyApp\obj\Debug\RubberDuckyApp.csproj.GenerateResource.Cache

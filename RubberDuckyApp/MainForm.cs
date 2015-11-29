@@ -427,12 +427,13 @@ namespace RubberDuckyApp
                     else
                     {
                         tempPayload.Code = GetCodeFromPayload(payload);
+                        tempPayload.Code = tempPayload.Code.Replace("\n", "\r\n");
                         File.WriteAllText(path, tempPayload.Code);
                     }
                 }
                 catch (Exception error)
                 {
-                    MessageBox.Show("One of the downloaded files was not able to save." +
+                    MessageBox.Show("One of the downloaded files was not able to save.\n" +
                                     "Check if an Antivirus software/ Firewall prevented this and try again.");
                 }
             }
