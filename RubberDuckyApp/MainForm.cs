@@ -196,6 +196,8 @@ namespace RubberDuckyApp
 
         private void RefreshMicroSdComboBox()
         {
+            comboBox3.Items.Clear();
+            
             try
             {
                 foreach (DriveInfo driveInf in DriveInfo.GetDrives())
