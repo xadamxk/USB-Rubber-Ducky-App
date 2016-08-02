@@ -196,31 +196,40 @@ namespace RubberDuckyApp
 
         private void RefreshMicroSdComboBox()
         {
-            // Assign removable drives to combobox3
-            comboBox3.Items.Clear();
-            foreach (var Drives in Environment.GetLogicalDrives())
+            try
             {
-                DriveInfo driveInf = new DriveInfo(Drives);
+                foreach (DriveInfo driveInf in DriveInfo.GetDrives())
+                {
+                    // Lists all USB's
+                    if (driveInf.DriveType == DriveType.Removable) // USB Removeable Drive
+                    {
+                        // Current Drive
+                        string drvName = drive.Name.ToString();
+                        string drvVolume = drive.VolumeLabel;
 
-                if (driveInf.IsReady)
-                    if (driveInf.DriveType.ToString().Contains("Removable"))
-                        comboBox3.Items.Add(driveInf.Name);
+                        if(drvName == "Ducky") // If Name = Ducky
+                        {
+                            comboBox3.Items.Add(driveInf.Name);
+                        }
+                        else
+                        {
+                            // No USB's with Ducky as Name
+                        }
+                    }
+                    else
+                    {
+                        // No USB's Found
+                        MessageBox.Show("No removable storage device was found.\n" +
+                        "Please insert the MicroSD card that will be used for your USB Rubber Ducky.\n" +
+                        "Click \"Refresh\" when ready.");
+                    }
+                    
+                }
             }
-
-            // Remove copies due to loop
-            object[] distinctItems = (from Object o in comboBox3.Items select o).Distinct().ToArray();
-            comboBox3.Items.Clear();
-            comboBox3.Items.AddRange(distinctItems);
-
-            if (comboBox3.Items.Count > 0)
-                comboBox3.SelectedIndex = 0;
-            // Add specifc drive name check here
-
-            if (comboBox3.Items.Count == 0)
-                MessageBox.Show(
-                    "No removable storage device was found.\n" +
-                    "Please insert the MicroSD card that will be used for your USB Rubber Ducky.\n" +
-                    "Click \"Refresh\" when ready.");
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
 
         private void RefreshEncoderElements()
