@@ -23,7 +23,7 @@ mono_crash.*
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
+# [Rr]elease/
 [Rr]eleases/
 x64/
 x86/
@@ -31,7 +31,7 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
+[Bb]in/[Dd]ebug
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
@@ -573,8 +573,8 @@ $RECYCLE.BIN/
 # Azure Stream Analytics local run output
 
 # MSBuild Binary and Structured Log
-/bin
-/obj
+/bin/Debug
+/obj/Debug
 
 # NVidia Nsight GPU debugger configuration file
 
