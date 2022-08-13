@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using HtmlAgilityPack;
 
 /* To-Do List
  * TODO: Clean up variables
@@ -32,9 +33,10 @@ namespace RubberDuckyApp
         bool microSDCheck;
         private string[] defaultScriptsNameArray = new string[100]; // Cap default limit to 100 scripts
         private string[] customScriptsNameArray = new string[50]; // Cap custom limit to 50 scripts
-        const string payloadHeader1 = "Select a Payload...";
-        const string payloadHeader2 = "--- Custom Scripts ---";
-        const string payloadHeader3 = "--- Default Scripts ---";
+
+        private const string PayloadHeaderSelect = "Select a Payload...";
+        private const string PayloadHeaderCustom = "--- Custom Scripts ---";
+        private const string PayloadHeaderDefault = "--- Default Scripts ---";
 
         readonly string[] keyboardStrings = 
         {
@@ -43,10 +45,10 @@ namespace RubberDuckyApp
             "pt", "ru", "si", "sv", "tr", "us"
         };
 
-        const string encoderURL =
+        private const string EncoderURL =
             "https://github.com/midnitesnake/USB-Rubber-Ducky/blob/master/Encoder/encoder.jar?raw=true";
 
-        const string payloadsURL =
+        private const string PayloadsURL =
             "https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads";
 
         private readonly WebClient _client;
@@ -206,12 +208,13 @@ namespace RubberDuckyApp
                     if (driveInf.DriveType == DriveType.Removable) // USB Removeable Drive
                     {
                         // Current Drive
-                        string drvName = drive.Name.ToString();
-                        string drvVolume = drive.VolumeLabel;
-
-                        if(drvName == "Ducky") // If Name = Ducky
+                        string drvName = driveInf.Name.ToString();
+                        string drvVolume = driveInf.VolumeLabel;
+                        Console.WriteLine($"{drvName}:${drvVolume}");
+                        comboBox3.Items.Add(driveInf.Name);
+                        if (drvName == "Ducky") // If Name = Ducky
                         {
-                            comboBox3.Items.Add(driveInf.Name);
+                            
                         }
                         else
                         {
@@ -309,7 +312,7 @@ namespace RubberDuckyApp
                 using (var client = new WebClient())
                 {
                     client.Headers.Add("user-agent", "Anything");
-                    client.DownloadFile(encoderURL, encoderLocation);
+                    client.DownloadFile(EncoderURL, encoderLocation);
                 }
             }
         }
@@ -349,8 +352,8 @@ namespace RubberDuckyApp
             var customNameList = new List<string>();
             var defaultNameList = new List<string>();
 
-            comboBox4.Items.Add(payloadHeader1);
-            comboBox4.Items.Add(payloadHeader2);
+            comboBox4.Items.Add(PayloadHeaderSelect);
+            comboBox4.Items.Add(PayloadHeaderCustom);
             // Add each custom payload to combobox4
             foreach (var t in Directory.GetFiles(customDirectory, "*.txt").Select(Path.GetFileNameWithoutExtension))
             {
@@ -358,7 +361,7 @@ namespace RubberDuckyApp
                 comboBox4.Items.Add(t);
             }
             // Add each default payload to combobox4
-            comboBox4.Items.Add(payloadHeader3);
+            comboBox4.Items.Add(PayloadHeaderDefault);
             foreach (var s in Directory.GetFiles(defaultDirectory, "*.txt").Select(Path.GetFileNameWithoutExtension))
             {
                 defaultNameList.Add(s);
@@ -377,13 +380,32 @@ namespace RubberDuckyApp
 
             if (internetConnection)
             {
-                var source = _client.DownloadString(payloadsURL);
+                HtmlWeb web = new HtmlWeb();
+
+                var htmlDoc = web.Load(PayloadsURL);
+                HtmlNode markdownBody = htmlDoc.DocumentNode.SelectSingleNode(@"//*[@id='wiki-body']/div[1]");
+                int actualScriptCount = 0;
+                foreach (HtmlNode list in markdownBody.Descendants("ul"))
+                {
+                    foreach (HtmlNode item in list.ChildNodes)
+                    {
+                        if (item.NodeType == HtmlNodeType.Element)
+                        {
+                            actualScriptCount++;
+                        }
+                    }
+                }
+                Console.WriteLine(actualScriptCount);
+
+                // var source = _client.DownloadString(PayloadsURL);
                 DirectoryInfo dir = new DirectoryInfo(duckyDirectory + "\\Scripts\\Default\\");
 
                 // Break Payloads Page into list
-                string tempPage = GetBetween(source, "<ul>", "</ul>");
+
+                //string[] test = source.Split(test2, StringSplitOptions.RemoveEmptyEntries);
+                //string tempPage = GetBetween(source, "<ul>", "</ul>");
                 // Count number of items in list
-                int actualScriptCount = Regex.Matches(tempPage, "<li>").Cast<Match>().Count();
+                //int actualScriptCount = Regex.Matches(tempPage, "<li>").Cast<Match>().Count();
 
                 int downloadedScriptCount = dir.GetFiles().Length;
 
@@ -406,9 +428,8 @@ namespace RubberDuckyApp
             MessageBox.Show("Downloading default Ducky Scripts from github.com/hak5darren/USB-Rubber-Ducky.\n" +
                             "The program will load once they are finished downloading.");
             //Load Wiki-Payload Page
-            var source = _client.DownloadString(payloadsURL);
-            //var payloadsCodes = new List<Payload>();
-            //var payloadsName = new List<string>();
+            var source = _client.DownloadString(PayloadsURL);
+            List<string> failedPayloads = new List<string>();
 
             // Each link on Wiki-Payload Page
             foreach (var payload in PayloadParser.Parse(source))
@@ -418,21 +439,22 @@ namespace RubberDuckyApp
                 if (!payload.Link.Contains("hak5darren/USB-Rubber-Ducky/wiki/Payload---"))
                     continue;
                 // Clean up payload name
-                var santizedName = "";
-                if (santizedName.Contains("Payload - ")) // Remove Payload - from title
-                    santizedName = santizedName.Replace("Payload - ", "");
-                santizedName = payload.Name.Replace("/", " ").Replace("-", " ");
-                santizedName = santizedName.SanitizeForFile().Replace("Payload   ", "");
-                if (santizedName.Contains("&#39;")) // Fix ' in title
-                    santizedName = santizedName.Replace("&#39;", "'");
-                santizedName = Regex.Replace(santizedName, @"(^\w)|(\s\w)", m => m.Value.ToUpper()); // Capitalize each word in title
-                if (santizedName.StartsWith(" ")) // Remove first char if string starts with a space
-                    santizedName = santizedName.Remove(0, 1);
+                var sanitized = "";
+                if (sanitized.Contains("Payload - ")) // Remove Payload - from title
+                    sanitized = sanitized.Replace("Payload - ", "");
+                sanitized = payload.Name.Replace("/", " ").Replace("-", " ");
+                sanitized = sanitized.SanitizeForFile().Replace("Payload   ", "");
+                sanitized = WebUtility.HtmlDecode(sanitized);
+                //if (sanitized.Contains("&#39;")) // Fix ' in title
+                //    sanitized = sanitized.Replace("&#39;", "'");
+                sanitized = Regex.Replace(sanitized, @"(^\w)|(\s\w)", m => m.Value.ToUpper()); // Capitalize each word in title
+                if (sanitized.StartsWith(" ")) // Remove first char if string starts with a space
+                    sanitized = sanitized.Remove(0, 1);
 
                 // Assign path
                 try
                 {
-                    var path = Path.Combine(duckyDirectory + "\\Scripts\\Default\\", santizedName + ".txt");
+                    var path = Path.Combine(duckyDirectory + "\\Scripts\\Default\\", sanitized + ".txt");
                     if (File.Exists(path))
                         tempPayload.Code = File.ReadAllText(path);
                     else
@@ -442,11 +464,24 @@ namespace RubberDuckyApp
                         File.WriteAllText(path, tempPayload.Code);
                     }
                 }
-                catch (Exception error)
+                catch (Exception)
                 {
-                    MessageBox.Show("One of the downloaded files was not able to save.\n" +
-                                    "Check if an Antivirus software/ Firewall prevented this and try again.");
+                    failedPayloads.Add(payload.Name);
+                    var path = Path.Combine(duckyDirectory + "\\Scripts\\Default\\", sanitized + ".txt");
+                    File.WriteAllText(path, "");
+
                 }
+            }
+
+            if (failedPayloads.Count > 0)
+            {
+                MessageBox.Show($@"{failedPayloads.Count} payloads failed to save.
+" +
+                                @"Check if an Antivirus software/ Firewall prevented this and try again.
+" + 
+                                @"Failed payloads include:
+" + 
+                                String.Join("\n", failedPayloads.ToArray()));
             }
         }
 
@@ -475,18 +510,18 @@ namespace RubberDuckyApp
             // Load Selected Payload Button
             bool scriptFound = false;
 
-            if (comboBox4.SelectedItem == payloadHeader1)
-                PromptInvalidSelection(payloadHeader1);  
-            else if (comboBox4.SelectedItem == payloadHeader2)
-                PromptInvalidSelection(payloadHeader2);
-            else if (comboBox4.SelectedItem == payloadHeader3)
-                PromptInvalidSelection(payloadHeader3);
+            if (comboBox4.SelectedItem.ToString() == PayloadHeaderSelect)
+                PromptInvalidSelection(PayloadHeaderSelect);  
+            else if (comboBox4.SelectedItem.ToString() == PayloadHeaderCustom)
+                PromptInvalidSelection(PayloadHeaderCustom);
+            else if (comboBox4.SelectedItem.ToString() == PayloadHeaderDefault)
+                PromptInvalidSelection(PayloadHeaderDefault);
             else
             {
                 // Check if selected script is in custom folder
                 foreach (string t in customScriptsNameArray)
                 {
-                    if (comboBox4.SelectedItem == t)
+                    if (comboBox4.SelectedItem.ToString() == t)
                     {
                         string scriptPath = duckyDirectory + "\\Scripts\\Custom\\" + t + ".txt";
                         textBox1.Text = File.ReadAllText(scriptPath);
@@ -499,7 +534,7 @@ namespace RubberDuckyApp
                 {
                     foreach (var s in defaultScriptsNameArray)
                     {
-                        if (comboBox4.SelectedItem == s)
+                        if (comboBox4.SelectedItem.ToString() == s)
                         {
                             string scriptPath = duckyDirectory + "\\Scripts\\Default\\" + s + ".txt";
                             textBox1.Text = File.ReadAllText(scriptPath);
