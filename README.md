@@ -4,7 +4,8 @@ Windows GUI for USB Rubber Ducky</p>
 <h3><b><big>Description</big></b></h3>
 This tool was made for <a href="https://github.com/hak5darren/USB-Rubber-Ducky/wiki">Hak5's USB Rubber Ducky</a>. It helps users create and copy Rubber Ducky payloads to their Ducky's MicroSD card. The tool will automatically make a home directory (ie C:\RubberDucky) and download the most up-to-date encoder.jar file from the Rubber Ducky Wiki (Currently uses encoder v 2.6.3). After directories are made, default scripts are downloaded and imported into the encoder menu.
 
-Updated to work on Windows 10+ as of August 13, 2022
+
+<p><b>Updated to work on Windows 10+ as of August 13, 2022</b></p>
 
 <h3><b><big>Features</big></b></h3>
 <ul><li><b>Helpful Tooltips:</b> Tooltip descriptions for each program feature.</li></ul>
