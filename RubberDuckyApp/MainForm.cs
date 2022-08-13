@@ -45,10 +45,10 @@ namespace RubberDuckyApp
             "pt", "ru", "si", "sv", "tr", "us"
         };
 
-        private const string EncoderURL =
-            "https://github.com/midnitesnake/USB-Rubber-Ducky/blob/master/Encoder/encoder.jar?raw=true";
+        private const string EncoderUrl =
+            "https://github.com/hak5darren/USB-Rubber-Ducky/blob/master/Encoder/encoder.jar?raw=true";
 
-        private const string PayloadsURL =
+        private const string PayloadsUrl =
             "https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads";
 
         private readonly WebClient _client;
@@ -140,11 +140,13 @@ namespace RubberDuckyApp
         private void button2_Click(object sender, EventArgs e)
         {
             // Copy .bin Button
-            RefreshMicroSdComboBox();
-            if (comboBox3.SelectedIndex != -1) // Check title array for removable disks
-                    microSDCheck = true;
+            // Check title array for removable disks
+            if (comboBox3.SelectedIndex != -1)
+            {
+                microSDCheck = true;
+            }
 
-            if ( microSDCheck)
+            if (microSDCheck)
                 File.Copy(duckyDirectory+"\\inject.bin",selectedRemovableDrive+"\\inject.bin", true);
 
             // .bin copied to label
@@ -204,36 +206,26 @@ namespace RubberDuckyApp
             {
                 foreach (DriveInfo driveInf in DriveInfo.GetDrives())
                 {
-                    // Lists all USB's
-                    if (driveInf.DriveType == DriveType.Removable) // USB Removeable Drive
+                    // Lists all removable drivers
+                    if (driveInf.DriveType == DriveType.Removable)
                     {
-                        // Current Drive
-                        string drvName = driveInf.Name.ToString();
-                        string drvVolume = driveInf.VolumeLabel;
-                        Console.WriteLine($"{drvName}:${drvVolume}");
                         comboBox3.Items.Add(driveInf.Name);
-                        if (drvName == "Ducky") // If Name = Ducky
-                        {
-                            
-                        }
-                        else
-                        {
-                            // No USB's with Ducky as Name
-                        }
+
                     }
-                    else
-                    {
-                        // No USB's Found
-                        MessageBox.Show("No removable storage device was found.\n" +
-                        "Please insert the MicroSD card that will be used for your USB Rubber Ducky.\n" +
-                        "Click \"Refresh\" when ready.");
-                    }
-                    
                 }
+                // No removable drives found
+                if (comboBox3.Items.Count == 0){
+                    MessageBox.Show(@"No removable storage device was found.
+" +
+                                    @"Please insert the MicroSD card that will be used for your USB Rubber Ducky.
+" +
+                                    @"Click ""Refresh"" when ready.");
+                } else if (comboBox3.Items.Count > 0)
+                    comboBox3.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show(@"Error: " + ex.Message);
             }
         }
 
@@ -255,17 +247,16 @@ namespace RubberDuckyApp
         {
             if (!Directory.Exists(duckyDirectory))
             {
-                DialogResult result = MessageBox.Show("The directory: \"" + duckyDirectory + "\"" + " does not exist.\nWould you like to create it for this application?",
-                    "NOTICE!",
+                DialogResult result = MessageBox.Show($@"The directory: {duckyDirectory} does not exist.
+ Would you like to create it for this application?",
+                    @"NOTICE!",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.None,
                     MessageBoxDefaultButton.Button3);
 
-                if (result == DialogResult.Yes) // If user said yes
-                {
-                    Directory.CreateDirectory(duckyDirectory);
-                    MessageBox.Show(duckyDirectory + "has been created!");
-                }
+                if (result != DialogResult.Yes) return; // If user didn't say yes
+                Directory.CreateDirectory(duckyDirectory);
+                MessageBox.Show($@"{duckyDirectory} has been created!");
             }
         }
 
@@ -279,23 +270,27 @@ namespace RubberDuckyApp
             {
                 if (Directory.Exists(java32)) // Then Java32 is installed
                 {
-                string[] java32subdirectories = Directory.GetDirectories(java32);
-                javaEXELocation = java32subdirectories.Last() + "\\bin\\java.exe"; // Selects most current version
-                File.Copy(javaEXELocation, javaHome);
+                    string[] java32Subdirectories = Directory.GetDirectories(java32);
+                    javaEXELocation = java32Subdirectories.Last() + "\\bin\\java.exe"; // Selects most current version
+                    File.Copy(javaEXELocation, javaHome);
                 }
                 else if (Directory.Exists(java64)) // Then Java64 is installed
                 {
-                    string[] java64subdirectories = Directory.GetDirectories(java64);
-                    javaEXELocation = java64subdirectories.Last() + "\\bin\\java.exe"; // Selects most current version
+                    string[] java64Subdirectories = Directory.GetDirectories(java64);
+                    javaEXELocation = java64Subdirectories.Last() + "\\bin\\java.exe"; // Selects most current version
                     File.Copy(javaEXELocation, javaHome);
                 }
                 else
                 {
-                    MessageBox.Show("No java.exe file was found.\n\n" +
-                                    "If you do not have Java installed, please download it from Oracle and re-run this program.\n\n" +
-                                    "If you installed Java to a non-default directory, " +
-                                    "please copy your java.exe file to:\n" + duckyDirectory + " and re-run this program.",
-                        "ERROR: No Java File Found!",
+                    MessageBox.Show(@"No java.exe file was found.
+
+" +
+                                    @"If you do not have Java installed, please download it from Oracle and re-run this program.
+
+" +
+                                    @"If you installed Java to a non-default directory, " +
+                                    $@"please copy your java.exe file to: {duckyDirectory} and re-run this program.",
+                        @"ERROR: No Java File Found!",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
                 }
@@ -312,7 +307,7 @@ namespace RubberDuckyApp
                 using (var client = new WebClient())
                 {
                     client.Headers.Add("user-agent", "Anything");
-                    client.DownloadFile(EncoderURL, encoderLocation);
+                    client.DownloadFile(EncoderUrl, encoderLocation);
                 }
             }
         }
@@ -382,11 +377,13 @@ namespace RubberDuckyApp
             {
                 HtmlWeb web = new HtmlWeb();
 
-                var htmlDoc = web.Load(PayloadsURL);
+                var htmlDoc = web.Load(PayloadsUrl);
                 HtmlNode markdownBody = htmlDoc.DocumentNode.SelectSingleNode(@"//*[@id='wiki-body']/div[1]");
                 int actualScriptCount = 0;
+                // Script categories
                 foreach (HtmlNode list in markdownBody.Descendants("ul"))
                 {
+                    // Scripts
                     foreach (HtmlNode item in list.ChildNodes)
                     {
                         if (item.NodeType == HtmlNodeType.Element)
@@ -395,17 +392,8 @@ namespace RubberDuckyApp
                         }
                     }
                 }
-                Console.WriteLine(actualScriptCount);
-
-                // var source = _client.DownloadString(PayloadsURL);
+                
                 DirectoryInfo dir = new DirectoryInfo(duckyDirectory + "\\Scripts\\Default\\");
-
-                // Break Payloads Page into list
-
-                //string[] test = source.Split(test2, StringSplitOptions.RemoveEmptyEntries);
-                //string tempPage = GetBetween(source, "<ul>", "</ul>");
-                // Count number of items in list
-                //int actualScriptCount = Regex.Matches(tempPage, "<li>").Cast<Match>().Count();
 
                 int downloadedScriptCount = dir.GetFiles().Length;
 
@@ -417,7 +405,8 @@ namespace RubberDuckyApp
             }
             else
                 MessageBox.Show(
-                    "ERROR: No Internet Connection!\nPlease connect to the Internet to download Rubber Ducky Payloads.");
+                    @"ERROR: No Internet Connection!
+Please connect to the Internet to download Rubber Ducky Payloads.");
 
         }
 
@@ -425,10 +414,11 @@ namespace RubberDuckyApp
         {
             // Thanks to Mr.Trvp for helping with this method.
             //Alert User
-            MessageBox.Show("Downloading default Ducky Scripts from github.com/hak5darren/USB-Rubber-Ducky.\n" +
-                            "The program will load once they are finished downloading.");
+            MessageBox.Show(@"Downloading default Ducky Scripts from github.com/hak5darren/USB-Rubber-Ducky.
+" +
+                            @"The program will load once they are finished downloading.");
             //Load Wiki-Payload Page
-            var source = _client.DownloadString(PayloadsURL);
+            var source = _client.DownloadString(PayloadsUrl);
             List<string> failedPayloads = new List<string>();
 
             // Each link on Wiki-Payload Page
@@ -445,8 +435,6 @@ namespace RubberDuckyApp
                 sanitized = payload.Name.Replace("/", " ").Replace("-", " ");
                 sanitized = sanitized.SanitizeForFile().Replace("Payload   ", "");
                 sanitized = WebUtility.HtmlDecode(sanitized);
-                //if (sanitized.Contains("&#39;")) // Fix ' in title
-                //    sanitized = sanitized.Replace("&#39;", "'");
                 sanitized = Regex.Replace(sanitized, @"(^\w)|(\s\w)", m => m.Value.ToUpper()); // Capitalize each word in title
                 if (sanitized.StartsWith(" ")) // Remove first char if string starts with a space
                     sanitized = sanitized.Remove(0, 1);
@@ -547,8 +535,8 @@ namespace RubberDuckyApp
         private static void PromptInvalidSelection(string item)
         {
             MessageBox.Show(
-                    "ERROR! Invalid option selected!\n" + item + " is a seperator, not a payload.\n" +
-                    "Please select a valid payload from the Payloads dropdown.");
+                    $@"ERROR! Invalid option selected! {item} is a separator, not a payload.\n" +
+                    @"Please select a valid payload from the Payloads dropdown.");
         }
 
         private void comboBox4_MouseHover(object sender, EventArgs e)
@@ -561,7 +549,7 @@ namespace RubberDuckyApp
             // Eject selected MicroSD
             selectedRemovableDrive = selectedRemovableDrive.Trim('\\');
             selectedRemovableDrive = selectedRemovableDrive.Trim(':');
-            char drive = Char.Parse(selectedRemovableDrive);
+            char drive = char.Parse(selectedRemovableDrive);
 
             try
             {
